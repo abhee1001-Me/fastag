@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GTROPY Fastag Operation</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      height: 100vh;
+      display: flex;
+      overflow: hidden;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    /* Left Panel */
+    .left-panel {
+      width: 250px;
+      background: linear-gradient(180deg, #2c3e50 0%, #34495e 100%);
+      color: white;
+      padding: 20px;
+      overflow-y: auto;
+      box-shadow: 2px 0 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .left-panel h3 {
+      margin-bottom: 30px;
+      color: #fff;
+      font-size: 28px;
+      font-weight: 700;
+      text-align: center;
+      padding: 15px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+    
+    .left-panel button {
+      width: 100%;
+      padding: 14px 20px;
+      margin-bottom: 12px;
+      font-size: 15px;
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      transition: all 0.3s ease;
+      text-align: left;
+      font-weight: 500;
+    }
+    
+    .left-panel button:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateX(5px);
+      padding-left: 25px;
+    }
+    
+    .left-panel button.active {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+      font-weight: 600;
+    }
+    
+    /* Right Panel */
+    .right-panel {
+      flex: 1;
+      padding: 40px;
+      background: #f5f7fa;
+      overflow-y: auto;
+    }
+    
+    .content-section {
+      background: white;
+      padding: 35px;
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+      animation: fadeIn 0.4s ease;
+    }
+    
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .content-section h2 {
+      color: #2c3e50;
+      margin-bottom: 15px;
+      font-size: 26px;
+      font-weight: 700;
+      border-bottom: 3px solid #667eea;
+      padding-bottom: 12px;
+      display: inline-block;
+    }
+    
+    .content-section > p {
+      line-height: 1.7;
+      color: #5a6c7d;
+      margin-bottom: 25px;
+      font-size: 15px;
+    }
+    
+    /* Welcome Section */
+    .welcome-section {
+      text-align: center;
+      padding: 80px 40px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 15px;
+      color: white;
+    }
+    
+    .welcome-section h2 {
+      font-size: 48px;
+      margin-bottom: 20px;
+      color: white;
+      border: none;
+      text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    .welcome-section p {
+      font-size: 20px;
+      color: rgba(255, 255, 255, 0.95);
+    }
+    
+    /* Common Form Container */
+    .form-container {
+      background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%);
+      border-radius: 15px;
+      padding: 30px;
+      margin-top: 25px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      border: 2px solid #e1e8ed;
+    }
+    
+    .form-container h3 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #2c3e50;
+      font-size: 22px;
+      font-weight: 600;
+    }
+    
+    /* Form Group Styling */
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: #2c3e50;
+      font-weight: 600;
+    }
+    
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #e1e8ed;
+      border-radius: 8px;
+      font-size: 15px;
+      transition: all 0.3s ease;
+      background: white;
+      color: #2c3e50;
+    }
+    
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    
+    .form-group input::placeholder {
+      color: #a0aec0;
+    }
+    
+    .form-group input[readonly] {
+      background-color: #f5f7fa;
+      cursor: not-allowed;
+    }
+    
+    /* Button Styling */
+    .form-container button[type="submit"],
+    .form-container button.primary-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+      margin-top: 10px;
+    }
+    
+    .form-container button[type="submit"]:hover,
+    .form-container button.primary-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+    }
+    
+    .form-container button[type="submit"]:active,
+    .form-container button.primary-btn:active {
+      transform: translateY(0);
+    }
+    
+    .form-container button.refresh-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+    }
+    
+    .form-container button.refresh-btn:hover {
+      background: linear-gradient(135deg, #7f8c8d 0%, #6c7a7b 100%);
+      transform: translateY(-2px);
+    }
+    
+    /* Response Styling */
+    .response {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #f8f9fa;
+      border: 2px solid #e1e8ed;
+      border-radius: 8px;
+      font-size: 14px;
+      line-height: 1.6;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      min-height: 50px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+    
+    .response.success,
+    .response:has(.success) {
+      background-color: #d4edda;
+      color: #155724;
+      border-color: #28a745;
+      border-left-width: 5px;
+    }
+    
+    .response.error,
+    .response:has(.error) {
+      background-color: #f8d7da;
+      color: #721c24;
+      border-color: #dc3545;
+      border-left-width: 5px;
+    }
+    
+    .response.loading,
+    .response:has(.loading) {
+      background-color: #d1ecf1;
+      color: #0c5460;
+      border-color: #17a2b8;
+      border-left-width: 5px;
+    }
+    
+    .error {
+      color: #dc3545;
+      font-weight: 600;
+    }
+    
+    .loading {
+      color: #17a2b8;
+      font-weight: 600;
+    }
+    
+    /* Scrollbar Styling */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: 5px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
+      
+      .left-panel {
+        width: 100%;
+        height: auto;
+      }
+      
+      .right-panel {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="left-panel">
+    <h3>GTROPY</h3>
+    <button onclick="openContent(1)" id="btn1">Tag Free</button>
+    <button onclick="openContent(2)" id="btn2">Update Full_KYC Status</button>
+    <button onclick="openContent(3)" id="btn3">Update Mapper Class</button>
+    <button onclick="openContent(4)" id="btn4">Add Vehicle Manual</button>
+    <button onclick="openContent(5)" id="btn5">Entity Swapping</button>
+    <!--<button onclick="openContent(6)" id="btn6">Vehicle Information Update</button>-->
+    
+  </div>
+  
+  <div class="right-panel" id="contentArea">
+    <div class="welcome-section">
+      <h2>Welcome!</h2>
+      <p>Select any option from the left panel to get started.</p>
+    </div>
+  </div>
+  
+  <script>
+    async function retrieveTags() {
+      const tagId = document.getElementById('tagInput').value;
+      const responseDiv = document.getElementById('response');
+      
+      if (!tagId.trim()) {
+        responseDiv.innerHTML = '<p class="error">Please enter a Tag ID</p>';
+        return;
+      }
+      
+      responseDiv.innerHTML = '<p class="loading">Fetching data...</p>';
+      
+      try {
+        const response = await fetch("https://thexyz.co.in/fastag/freetagsonvehicleshavingdraftstatus", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: `tagIds=${encodeURIComponent(tagId)}`
+        });
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const result = await response.text();
+        responseDiv.innerHTML = `<pre>${result}</pre>`;
+      } catch (error) {
+        responseDiv.innerHTML = `<p class="error">Error: ${error.message}</p>`;
+        console.error('Fetch error:', error);
+      }
+    }
+    
+    function submitKYCForm(event) {
+      event.preventDefault();
+      
+      const entityId = document.getElementById('entityId').value;
+      const responseMessage = document.getElementById('responseMessage');
+      
+      responseMessage.textContent = 'Submitting...';
+      responseMessage.classList.remove('success', 'error');
+      responseMessage.classList.add('loading');
+      
+      const myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+      
+      const urlencoded = new URLSearchParams();
+      urlencoded.append("entityIds", entityId);
+      urlencoded.append("status", "23");
+      
+      const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: urlencoded,
+        redirect: "follow"
+      };
+      
+      fetch("http://thexyz.co.in/fastag/updatekycstatus", requestOptions)
+        .then((response) => response.text())
+        .then((result) => {
+          responseMessage.textContent = result;
+          responseMessage.classList.add('success');
+          responseMessage.classList.remove('error', 'loading');
+        })
+        .catch((error) => {
+          responseMessage.textContent = 'Error: ' + error;
+          responseMessage.classList.add('error');
+          responseMessage.classList.remove('success', 'loading');
+        });
+    }
+    
+    function submitMapperForm(event) {
+      event.preventDefault();
+      
+      const vehicleNo = document.getElementById('vehicleNo').value;
+      const vehicleClass = document.getElementById('vehicleClass').value;
+      const mapperResponse = document.getElementById('mapperResponse');
+      
+      if (!vehicleNo.trim() || !vehicleClass.trim()) {
+        mapperResponse.textContent = 'Please fill in all fields';
+        mapperResponse.classList.add('error');
+        mapperResponse.classList.remove('success', 'loading');
+        return;
+      }
+      
+      mapperResponse.textContent = 'Updating...';
+      mapperResponse.classList.remove('success', 'error');
+      mapperResponse.classList.add('loading');
+      
+      const formData = new URLSearchParams();
+      formData.append('entityId', vehicleNo);
+      formData.append('vehicleClass', vehicleClass);
+      
+      fetch('http://thexyz.co.in/fastag/updatevehiclesmapperclass', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: formData.toString(),
+      })
+      .then((response) => response.text())
+      .then((result) => {
+        mapperResponse.textContent = result;
+        mapperResponse.classList.add('success');
+        mapperResponse.classList.remove('error', 'loading');
+      })
+      .catch((error) => {
+        mapperResponse.textContent = 'Error: ' + error;
+        mapperResponse.classList.add('error');
+        mapperResponse.classList.remove('success', 'loading');
+      });
+    }
+    
+    function submitVehicleForm(event) {
+      event.preventDefault();
+      
+      const form = document.getElementById('vehicleRegForm');
+      const vehicleResponse = document.getElementById('vehicleResponse');
+      
+      const data = {
+        entityId: form.vehicleEntityId.value.trim(),
+        vehicleName: form.vehicleNameField.value.trim(),
+        mapperClass: form.mapperClassField.value.trim(),
+        tagId: form.tagIdField.value.trim(),
+        rcDate: form.rcDateField.value,
+        companyId: form.companyIdField.value.trim()
+      };
+      
+      for (const [key, value] of Object.entries(data)) {
+        if (!value) {
+          vehicleResponse.textContent = `Please fill in the ${key}.`;
+          vehicleResponse.classList.add('error');
+          return;
+        }
+      }
+      
+      const url = `http://thexyz.co.in/fastag/addvehicletoexistingcustomer?entityId=${encodeURIComponent(data.entityId)}&vehicleName=${encodeURIComponent(data.vehicleName)}&mapperClass=${encodeURIComponent(data.mapperClass)}&tagId=${encodeURIComponent(data.tagId)}&rcDate=${encodeURIComponent(data.rcDate)}&companyId=${encodeURIComponent(data.companyId)}`;
+      
+      vehicleResponse.textContent = 'Sending request...';
+      vehicleResponse.classList.add('loading');
+      vehicleResponse.classList.remove('error', 'success');
+      
+      fetch(url)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.text();
+        })
+        .then((text) => {
+          vehicleResponse.textContent = `Response:\n${text}`;
+          vehicleResponse.classList.add('success');
+          vehicleResponse.classList.remove('error', 'loading');
+        })
+        .catch((error) => {
+          vehicleResponse.textContent = `Error: ${error.message}`;
+          vehicleResponse.classList.add('error');
+          vehicleResponse.classList.remove('success', 'loading');
+        });
+    }
+    
+    function refreshVehicleForm() {
+      const form = document.getElementById('vehicleRegForm');
+      const vehicleResponse = document.getElementById('vehicleResponse');
+      form.reset();
+      vehicleResponse.textContent = '';
+      vehicleResponse.classList.remove('success', 'error', 'loading');
+      form.vehicleEntityId.focus();
+    }
+    
+    function submitEntitySwapForm(event) {
+      event.preventDefault();
+      
+      const entityId = document.getElementById('swapEntityId').value;
+      const parentEntityId = document.getElementById('swapParentEntityId').value;
+      const entityResponse = document.getElementById('entityResponse');
+      
+      if (!entityId.trim() || !parentEntityId.trim()) {
+        entityResponse.textContent = 'Please fill in all fields';
+        entityResponse.classList.add('error');
+        entityResponse.classList.remove('success', 'loading');
+        return;
+      }
+      
+      entityResponse.textContent = 'Updating...';
+      entityResponse.classList.add('loading');
+      entityResponse.classList.remove('success', 'error');
+      
+      const formData = new URLSearchParams();
+      formData.append('entityId', entityId);
+      formData.append('parentEntityId', parentEntityId);
+      formData.append('bank', 'LIVQUIK');
+      
+      fetch('http://thexyz.co.in/fastag/updateparententityid', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: formData.toString(),
+      })
+      .then(response => response.json())
+      .then(data => {
+        entityResponse.textContent = 'Parent Entity ID updated successfully';
+        entityResponse.classList.add('success');
+        entityResponse.classList.remove('error', 'loading');
+        console.log(data);
+      })
+      .catch(error => {
+        entityResponse.textContent = 'Error updating Parent Entity ID: ' + error;
+        entityResponse.classList.add('error');
+        entityResponse.classList.remove('success', 'loading');
+        console.error(error);
+      });
+    }
+    
+    function setupVehicleInputs() {
+      const textInputs = document.querySelectorAll('.form-container input[type="text"]');
+      textInputs.forEach(input => {
+        input.addEventListener('input', () => {
+          input.value = input.value.toUpperCase();
+        });
+      });
+    }
+    
+    function openContent(option) {
+      document.querySelectorAll('.left-panel button').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      
+      document.getElementById('btn' + option).classList.add('active');
+      
+      const content = {
+        1: `
+          <div class="content-section">
+            <h2>TAG FREE</h2>
+            <p>Welcome! Here you can free your FASTag. Just write a Tag ID and click the Submit button.</p>
+            
+            <div class="form-container">
+              <h3>Free Tag Retrieval</h3>
+              <div class="form-group">
+                <label for="tagInput">Tag ID</label>
+                <input type="text" id="tagInput" placeholder="Enter Tag ID">
+              </div>
+              <button type="button" class="primary-btn" onclick="retrieveTags()">Submit</button>
+              <div class="response" id="response"></div>
+            </div>
+          </div>
+        `,
+        2: `
+          <div class="content-section">
+            <h2>UPDATE KYC STATUS</h2>
+            <p>Welcome! Here you can update the VKYC status in the app. Just enter the Entity ID and click the Submit button. The update will reflect after 10 to 30 minutes.</p>
+            
+            <div class="form-container">
+              <h3>Update Full_KYC Status</h3>
+              <form id="kycForm" onsubmit="submitKYCForm(event)">
+                <div class="form-group">
+                  <label for="entityId">Entity ID</label>
+                  <input type="text" id="entityId" name="entityId" placeholder="Write entity ID" required />
+                </div>
+                <button type="submit">Submit</button>
+              </form>
+              <div class="response" id="responseMessage"></div>
+            </div>
+          </div>
+        `,
+        3: `
+          <div class="content-section">
+            <h2>UPDATE MAPPER CLASS</h2>
+            <p>Welcome! Here you can update the vehicle mapper class. Enter the vehicle number and the new mapper class, then click Submit.</p>
+            
+            <div class="form-container">
+              <h3>Change Mapper Class</h3>
+              <form id="mapperForm" onsubmit="submitMapperForm(event)">
+                <div class="form-group">
+                  <label for="vehicleNo">Vehicle No</label>
+                  <input type="text" id="vehicleNo" name="vehicleNo" placeholder="Write vehicle number" required />
+                </div>
+                <div class="form-group">
+                  <label for="vehicleClass">Mapper Class</label>
+                  <input type="text" id="vehicleClass" name="vehicleClass" placeholder="Write vehicle class" required />
+                </div>
+                <button type="submit">Submit</button>
+              </form>
+              <div class="response" id="mapperResponse"></div>
+            </div>
+          </div>
+        `,
+        4: `
+          <div class="content-section">
+            <h2>ADD VEHICLE MANUALLY</h2>
+            <p>Welcome! Here you can manually add a vehicle to an existing customer. Fill in all the required fields and click Submit button.</p>
+            
+            <div class="form-container">
+              <h3>Fastag Vehicle Add - Manual Entry</h3>
+              <form id="vehicleRegForm" onsubmit="submitVehicleForm(event)" autocomplete="off" novalidate>
+                <div class="form-group">
+                  <label for="vehicleEntityId">Entity ID</label>
+                  <input type="text" id="vehicleEntityId" name="vehicleEntityId" placeholder="Enter Entity ID" required />
+                </div>
+                <div class="form-group">
+                  <label for="vehicleNameField">Vehicle Name</label>
+                  <input type="text" id="vehicleNameField" name="vehicleNameField" placeholder="Enter Vehicle Name" required />
+                </div>
+                <div class="form-group">
+                  <label for="mapperClassField">Mapper Class</label>
+                  <input type="text" id="mapperClassField" name="mapperClassField" placeholder="Enter Mapper Class" required />
+                </div>
+                <div class="form-group">
+                  <label for="tagIdField">Tag ID</label>
+                  <input type="text" id="tagIdField" name="tagIdField" placeholder="Enter Tag ID" required />
+                </div>
+                <div class="form-group">
+                  <label for="rcDateField">RC Date (DD-MM-YYYY)</label>
+                  <input type="date" id="rcDateField" name="rcDateField" required />
+                </div>
+                <div class="form-group">
+                  <label for="companyIdField">Company ID</label>
+                  <input type="text" id="companyIdField" name="companyIdField" placeholder="Enter Company ID" required />
+                </div>
+                <button type="submit">Submit</button>
+                <button type="button" class="refresh-btn" onclick="refreshVehicleForm()">Refresh Page</button>
+              </form>
+              <div class="response" id="vehicleResponse"></div>
+            </div>
+          </div>
+        `,
+        5: `
+          <div class="content-section">
+            <h2>ENTITY SWAPPING</h2>
+            <p>Welcome! Here you can update the parent entity ID for a vehicle. Enter the vehicle number and new parent entity ID, then click the update button.</p>
+            
+            <div class="form-container">
+              <h3>Update Parent Entity</h3>
+              <form id="entitySwapForm" onsubmit="submitEntitySwapForm(event)">
+                <div class="form-group">
+                  <label for="swapEntityId">Vehicle No</label>
+                  <input type="text" id="swapEntityId" name="swapEntityId" placeholder="Write vehicle number" required />
+                </div>
+                <div class="form-group">
+                  <label for="swapParentEntityId">Parent Entity ID</label>
+                  <input type="text" id="swapParentEntityId" name="swapParentEntityId" placeholder="Write new entityId" required />
+                </div>
+                <button type="submit">Submit</button>
+              </form>
+              <div class="response" id="entityResponse"></div>
+            </div>
+          </div>
+        `,
+        
+          
+      };
+      
+      document.getElementById("contentArea").innerHTML = content[option];
+      
+      if (option === 4) {
+        setTimeout(setupVehicleInputs, 0);
+      }
+    }
+  </script>
+</body>
+</html>
